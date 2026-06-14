@@ -1,13 +1,7 @@
-type OfferCardProps = {
-  id: string;
-  title: string;
-  type: string;
-  price: number;
-  rating: number;
-  isPremium: boolean;
-  isFavorite: boolean;
-  previewImage: string;
-};
+import { Link } from 'react-router-dom';
+import { OfferType } from '../../mocks/offers';
+
+type OfferCardProps = OfferType;
 
 function OfferCard({ id, title, type, price, rating, isPremium, isFavorite, previewImage }: OfferCardProps): JSX.Element {
   const ratingWidth = `${Math.round(rating) * 20}%`;
@@ -20,7 +14,7 @@ function OfferCard({ id, title, type, price, rating, isPremium, isFavorite, prev
         </div>
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <Link to={`/offer/${id}`}>
           <img
             className="place-card__image"
             src={previewImage}
@@ -28,7 +22,7 @@ function OfferCard({ id, title, type, price, rating, isPremium, isFavorite, prev
             height="200"
             alt="Place image"
           />
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
@@ -53,7 +47,7 @@ function OfferCard({ id, title, type, price, rating, isPremium, isFavorite, prev
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href={`/offer/${id}`}>{title}</a>
+          <Link to={`/offer/${id}`}>{title}</Link>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

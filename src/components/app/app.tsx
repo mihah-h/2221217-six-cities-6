@@ -5,20 +5,10 @@ import Favorites from '../favorites/favorites';
 import Offer from '../offer/offer';
 import NotFound from '../not-found/not-found';
 import PrivateRoute from '../private-route/private-route';
-
-type Offer = {
-  id: string;
-  title: string;
-  type: string;
-  price: number;
-  rating: number;
-  isPremium: boolean;
-  isFavorite: boolean;
-  previewImage: string;
-};
+import { OfferType } from '../../mocks/offers';
 
 type AppProps = {
-  offers: Offer[];
+  offers: OfferType[];
   offersCount: number;
   activeCity: string;
 };
@@ -33,11 +23,11 @@ function App({ offers, offersCount, activeCity }: AppProps): JSX.Element {
           path="/favorites"
           element={
             <PrivateRoute>
-              <Favorites />
+              <Favorites offers={offers} />
             </PrivateRoute>
           }
         />
-        <Route path="/offer/:id" element={<Offer />} />
+        <Route path="/offer/:id" element={<Offer offers={offers} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
