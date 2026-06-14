@@ -1,4 +1,10 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import MainPage from '../main-page/main-page';
+import Login from '../login/login';
+import Favorites from '../favorites/favorites';
+import Offer from '../offer/offer';
+import NotFound from '../not-found/not-found';
+import PrivateRoute from '../private-route/private-route';
 
 type Offer = {
   id: string;
@@ -19,11 +25,22 @@ type AppProps = {
 
 function App({ offers, offersCount, activeCity }: AppProps): JSX.Element {
   return (
-    <MainPage
-      offers={offers}
-      offersCount={offersCount}
-      activeCity={activeCity}
-    />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainPage offers={offers} offersCount={offersCount} activeCity={activeCity} />} />
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/favorites"
+          element={
+            <PrivateRoute>
+              <Favorites />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/offer/:id" element={<Offer />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
