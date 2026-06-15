@@ -48,6 +48,13 @@ function Map({ city, offers, activeOfferId }: MapProps): JSX.Element {
       }).addTo(mapInstanceRef.current);
     }
 
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.setView(
+        [city.location.latitude, city.location.longitude],
+        city.location.zoom
+      );
+    }
+
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
 

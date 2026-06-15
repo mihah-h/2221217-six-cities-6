@@ -10,16 +10,14 @@ import { ReviewType } from '../../mocks/reviews';
 
 type AppProps = {
   offers: OfferType[];
-  offersCount: number;
-  activeCity: string;
   reviews: ReviewType[];
 };
 
-function App({ offers, offersCount, activeCity, reviews }: AppProps): JSX.Element {
+function App({ offers, reviews }: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<MainPage offers={offers} offersCount={offersCount} activeCity={activeCity} />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/login" element={<Login />} />
         <Route
           path="/favorites"

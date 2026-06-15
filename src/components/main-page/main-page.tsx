@@ -1,24 +1,30 @@
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import OfferList from '../offer-list/offer-list';
 import Map from '../map/map';
-import { OfferType } from '../../mocks/offers';
+import CitiesList from '../cities-list/cities-list';
+import { CITIES, CITY_COORDINATES } from '../../const';
+import { changeCity } from '../../store/action';
+import { RootState } from '../../store';
 
-type MainPageProps = {
-  offersCount: number;
-  offers: OfferType[];
-  activeCity: string;
-};
-
-function MainPage({ offersCount, offers, activeCity }: MainPageProps): JSX.Element {
+function MainPage(): JSX.Element {
+  const dispatch = useDispatch();
+  const city = useSelector((state: RootState) => state.city);
+  const allOffers = useSelector((state: RootState) => state.offers);
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
 
-  const city = offers.length > 0 ? offers[0].city : {
-    name: 'Amsterdam',
-    location: {
-      latitude: 52.37454,
-      longitude: 4.897976,
-      zoom: 12,
-    },
+  const filteredOffers = allOffers.filter((offer) => offer.city.name === city);
+  const offersCount = filteredOffers.length;
+
+  const cityLocation = filteredOffers.length > 0
+    ? filteredOffers[0].city
+    : {
+      name: city,
+      location: CITY_COORDINATES[city],
+    };
+
+  const handleCityClick = (selectedCity: string) => {
+    dispatch(changeCity(selectedCity));
   };
 
   return (
@@ -60,46 +66,17 @@ function MainPage({ offersCount, offers, activeCity }: MainPageProps): JSX.Eleme
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>{activeCity}</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
+          <CitiesList
+            cities={CITIES}
+            activeCity={city}
+            onCityClick={handleCityClick}
+          />
         </div>
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in {activeCity}</b>
+              <b className="places__found">{offersCount} places to stay in {city}</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -116,14 +93,14 @@ function MainPage({ offersCount, offers, activeCity }: MainPageProps): JSX.Eleme
                 </ul>
               </form>
               <OfferList
-                offers={offers}
+                offers={filteredOffers}
                 onActiveOfferChange={setActiveOfferId}
               />
             </section>
             <div className="cities__right-section">
               <Map
-                city={city}
-                offers={offers}
+                city={cityLocation}
+                offers={filteredOffers}
                 activeOfferId={activeOfferId}
               />
             </div>

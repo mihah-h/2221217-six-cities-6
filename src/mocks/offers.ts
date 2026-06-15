@@ -34,6 +34,52 @@ export type OfferType = {
 
 export const offers: OfferType[] = [
   {
+    id: '5',
+    title: 'Nice, cozy, warm big bed apartment',
+    type: 'apartment',
+    price: 180,
+    rating: 5,
+    isPremium: true,
+    isFavorite: false,
+    previewImage: 'img/apartment-03.jpg',
+    city: {
+      name: 'Paris',
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.868610,
+      longitude: 2.342499,
+      zoom: 8,
+    },
+  },
+  {
+    id: '6',
+    title: 'Wood and stone place',
+    type: 'room',
+    price: 80,
+    rating: 4,
+    isPremium: false,
+    isFavorite: false,
+    previewImage: 'img/room.jpg',
+    city: {
+      name: 'Paris',
+      location: {
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 48.846610,
+      longitude: 2.361499,
+      zoom: 8,
+    },
+  },
+  {
     id: '1',
     title: 'Beautiful & luxurious apartment at great location',
     type: 'apartment',
