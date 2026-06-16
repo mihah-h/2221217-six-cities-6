@@ -17,6 +17,15 @@ export function offersReducer(state: OffersData = initialOffersState, action: Ac
       return { ...state, offers: action.payload };
     case ActionType.SetOffersDataLoading:
       return { ...state, isOffersDataLoading: action.payload };
+    case ActionType.UpdateOffer:
+      return {
+        ...state,
+        offers: state.offers.map((offer) => (
+          offer.id === action.payload.id
+            ? { ...offer, isFavorite: action.payload.isFavorite }
+            : offer
+        )),
+      };
     default:
       return state;
   }

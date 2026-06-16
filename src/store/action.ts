@@ -18,6 +18,9 @@ export enum ActionType {
   SetReviews = 'SET_REVIEWS',
   SetOfferDataLoading = 'SET_OFFER_DATA_LOADING',
   ResetOfferData = 'RESET_OFFER_DATA',
+  UpdateOffer = 'UPDATE_OFFER',
+  FillFavorites = 'FILL_FAVORITES',
+  SetFavoritesDataLoading = 'SET_FAVORITES_DATA_LOADING',
 }
 
 export type ChangeCityAction = {
@@ -69,6 +72,21 @@ export type ResetOfferDataAction = {
   type: ActionType.ResetOfferData;
 };
 
+export type UpdateOfferAction = {
+  type: ActionType.UpdateOffer;
+  payload: OfferType;
+};
+
+export type FillFavoritesAction = {
+  type: ActionType.FillFavorites;
+  payload: OfferType[];
+};
+
+export type SetFavoritesDataLoadingAction = {
+  type: ActionType.SetFavoritesDataLoading;
+  payload: boolean;
+};
+
 export type Action =
   | ChangeCityAction
   | FillOffersAction
@@ -79,7 +97,10 @@ export type Action =
   | SetNearbyOffersAction
   | SetReviewsAction
   | SetOfferDataLoadingAction
-  | ResetOfferDataAction;
+  | ResetOfferDataAction
+  | UpdateOfferAction
+  | FillFavoritesAction
+  | SetFavoritesDataLoadingAction;
 
 export const changeCity = (city: string): ChangeCityAction => ({
   type: ActionType.ChangeCity,
@@ -128,6 +149,21 @@ export const setOfferDataLoading = (isOfferDataLoading: boolean): SetOfferDataLo
 
 export const resetOfferData = (): ResetOfferDataAction => ({
   type: ActionType.ResetOfferData,
+});
+
+export const updateOffer = (offer: OfferType): UpdateOfferAction => ({
+  type: ActionType.UpdateOffer,
+  payload: offer,
+});
+
+export const fillFavorites = (favorites: OfferType[]): FillFavoritesAction => ({
+  type: ActionType.FillFavorites,
+  payload: favorites,
+});
+
+export const setFavoritesDataLoading = (isFavoritesDataLoading: boolean): SetFavoritesDataLoadingAction => ({
+  type: ActionType.SetFavoritesDataLoading,
+  payload: isFavoritesDataLoading,
 });
 
 export const fetchOffersAction = () =>
@@ -247,5 +283,34 @@ export const postCommentAction = (offerId: string, { comment, rating }: CommentD
       return true;
     } catch {
       return false;
+    }
+  };
+
+export const toggleFavoriteAction = (offerId: string, isFavorite: boolean) =>
+  async (
+    dispatch: Dispatch<Action>,
+    _getState: () => State,
+    api: AxiosInstance,
+  ): Promise<void> => {
+    const status = isFavorite ? 0 : 1;
+    const { data } = await api.post<OfferType>(`/favorite/${offerId}/${status}`);
+    dispatch(updateOffer(data));
+  };
+
+export const fetchFavoritesAction = () =>
+  async (
+    dispatch: Dispatch<Action>,
+    _getState: () => State,
+    api: AxiosInstance,
+  ): Promise<void> => {
+    dispatch(setFavoritesDataLoading(true));
+    try {
+      const { data } = await api.get<OfferType[]>('/favorite');
+      dispatch(fillFavorites(data));
+      data.forEach((offer) => {
+        dispatch(updateOffer({ ...offer, isFavorite: true }));
+      });
+    } finally {
+      dispatch(setFavoritesDataLoading(false));
     }
   };
