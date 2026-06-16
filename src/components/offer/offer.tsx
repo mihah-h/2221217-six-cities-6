@@ -11,6 +11,7 @@ import {
   getOfferReviews,
 } from '../../store/selectors';
 import Header from '../header/header';
+import FavoriteButton from '../favorite-button/favorite-button';
 import NotFound from '../not-found/not-found';
 import ReviewForm from '../review-form/review-form';
 import ReviewList from '../review-list/review-list';
@@ -87,12 +88,14 @@ function Offer(): JSX.Element {
                 <h1 className="offer__name">
                   {offer.title}
                 </h1>
-                <button className="offer__bookmark-button button" type="button">
-                  <svg className="offer__bookmark-icon" width="31" height="33">
-                    <use xlinkHref="#icon-bookmark"></use>
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+                <FavoriteButton
+                  offerId={offer.id}
+                  isFavorite={offer.isFavorite}
+                  buttonClassName="offer__bookmark-button button"
+                  iconClassName="offer__bookmark-icon"
+                  iconWidth="31"
+                  iconHeight="33"
+                />
               </div>
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
@@ -198,15 +201,7 @@ function Offer(): JSX.Element {
                         <b className="place-card__price-value">&euro;{nearbyOffer.price}</b>
                         <span className="place-card__price-text">&#47;&nbsp;night</span>
                       </div>
-                      <button
-                        className={`place-card__bookmark-button button${nearbyOffer.isFavorite ? ' place-card__bookmark-button--active' : ''}`}
-                        type="button"
-                      >
-                        <svg className="place-card__bookmark-icon" width="18" height="19">
-                          <use xlinkHref="#icon-bookmark"></use>
-                        </svg>
-                        <span className="visually-hidden">{nearbyOffer.isFavorite ? 'In bookmarks' : 'To bookmarks'}</span>
-                      </button>
+                      <FavoriteButton offerId={nearbyOffer.id} isFavorite={nearbyOffer.isFavorite} />
                     </div>
                     <div className="place-card__rating rating">
                       <div className="place-card__stars rating__stars">

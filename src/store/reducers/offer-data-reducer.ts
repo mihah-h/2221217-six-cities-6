@@ -28,6 +28,18 @@ export function offerDataReducer(state: OfferData = initialOfferDataState, actio
       return { ...state, isOfferDataLoading: action.payload };
     case ActionType.ResetOfferData:
       return { ...initialOfferDataState };
+    case ActionType.UpdateOffer:
+      return {
+        ...state,
+        currentOffer: state.currentOffer?.id === action.payload.id
+          ? { ...state.currentOffer, isFavorite: action.payload.isFavorite }
+          : state.currentOffer,
+        nearbyOffers: state.nearbyOffers.map((offer) => (
+          offer.id === action.payload.id
+            ? { ...offer, isFavorite: action.payload.isFavorite }
+            : offer
+        )),
+      };
     default:
       return state;
   }

@@ -70,3 +70,7 @@ export const getNearbyOffersForDisplay = createSelector(
   getNearbyOffers,
   (nearbyOffers) => nearbyOffers.slice(0, 3),
 );
+
+export const getFavorites = (state: RootState): OfferType[] => state.favorites.favorites;
+
+export const getFavoritesDataLoading = (state: RootState) => state.favorites.isFavoritesDataLoading;
