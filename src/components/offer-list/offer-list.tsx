@@ -1,5 +1,5 @@
 import OfferCard from '../offer-card/offer-card';
-import { OfferType } from '../../mocks/offers';
+import { OfferType } from '../../types/offer';
 
 type OfferListProps = {
   offers: OfferType[];

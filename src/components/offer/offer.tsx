@@ -1,17 +1,18 @@
 import { useParams } from 'react-router-dom';
-import { OfferType } from '../../mocks/offers';
+import { useSelector } from 'react-redux';
 import { ReviewType } from '../../mocks/reviews';
+import { RootState } from '../../store';
 import ReviewForm from '../review-form/review-form';
 import ReviewList from '../review-list/review-list';
 import Map from '../map/map';
 
 type OfferProps = {
-  offers: OfferType[];
   reviews: ReviewType[];
 };
 
-function Offer({ offers, reviews }: OfferProps): JSX.Element {
+function Offer({ reviews }: OfferProps): JSX.Element {
   const { id } = useParams<{ id: string }>();
+  const offers = useSelector((state: RootState) => state.offers);
   const offer = offers.find((o) => o.id === id);
 
   if (!offer) {

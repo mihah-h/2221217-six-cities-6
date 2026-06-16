@@ -1,4 +1,4 @@
-import { OfferType } from '../mocks/offers';
+import { OfferType } from '../types/offer';
 
 export enum SortType {
   Popular = 'Popular',

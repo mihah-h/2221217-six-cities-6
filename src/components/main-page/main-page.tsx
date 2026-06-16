@@ -4,6 +4,7 @@ import OfferList from '../offer-list/offer-list';
 import Map from '../map/map';
 import CitiesList from '../cities-list/cities-list';
 import SortOptions from '../sort-options/sort-options';
+import Spinner from '../spinner/spinner';
 import { CITIES, CITY_COORDINATES } from '../../const';
 import { changeCity } from '../../store/action';
 import { RootState } from '../../store';
@@ -13,6 +14,7 @@ function MainPage(): JSX.Element {
   const dispatch = useDispatch();
   const city = useSelector((state: RootState) => state.city);
   const allOffers = useSelector((state: RootState) => state.offers);
+  const isOffersDataLoading = useSelector((state: RootState) => state.isOffersDataLoading);
   const [activeOfferId, setActiveOfferId] = useState<string | null>(null);
   const [activeSorting, setActiveSorting] = useState<SortType>(SortType.Popular);
 
@@ -86,25 +88,31 @@ function MainPage(): JSX.Element {
         </div>
         <div className="cities">
           <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offersCount} places to stay in {city}</b>
-              <SortOptions
-                activeSorting={activeSorting}
-                onSortingChange={setActiveSorting}
-              />
-              <OfferList
-                offers={sortedOffers}
-                onActiveOfferChange={setActiveOfferId}
-              />
-            </section>
-            <div className="cities__right-section">
-              <Map
-                city={cityLocation}
-                offers={sortedOffers}
-                activeOfferId={activeOfferId}
-              />
-            </div>
+            {isOffersDataLoading ? (
+              <Spinner />
+            ) : (
+              <>
+                <section className="cities__places places">
+                  <h2 className="visually-hidden">Places</h2>
+                  <b className="places__found">{offersCount} places to stay in {city}</b>
+                  <SortOptions
+                    activeSorting={activeSorting}
+                    onSortingChange={setActiveSorting}
+                  />
+                  <OfferList
+                    offers={sortedOffers}
+                    onActiveOfferChange={setActiveOfferId}
+                  />
+                </section>
+                <div className="cities__right-section">
+                  <Map
+                    city={cityLocation}
+                    offers={sortedOffers}
+                    activeOfferId={activeOfferId}
+                  />
+                </div>
+              </>
+            )}
           </div>
         </div>
       </main>

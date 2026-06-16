@@ -1,10 +1,8 @@
-import { OfferType } from '../../mocks/offers';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store';
 
-type FavoritesProps = {
-  offers: OfferType[];
-};
-
-function Favorites({ offers }: FavoritesProps): JSX.Element {
+function Favorites(): JSX.Element {
+  const offers = useSelector((state: RootState) => state.offers);
   const favoriteOffers = offers.filter((offer) => offer.isFavorite);
 
   return (
