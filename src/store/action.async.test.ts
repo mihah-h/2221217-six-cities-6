@@ -37,6 +37,18 @@ describe('Async actions', () => {
 
     expect(store.getState().offers.offers).toEqual(mockOffers);
     expect(store.getState().offers.isOffersDataLoading).toBe(false);
+    expect(store.getState().offers.hasError).toBe(false);
+  });
+
+  it('fetchOffersAction should set error when server is unavailable', async () => {
+    mockApi.onGet('/offers').reply(500);
+    const store = createTestStore(undefined, api);
+
+    await store.dispatch(fetchOffersAction());
+
+    expect(store.getState().offers.offers).toEqual([]);
+    expect(store.getState().offers.hasError).toBe(true);
+    expect(store.getState().offers.isOffersDataLoading).toBe(false);
   });
 
   it('fetchOfferAction should load offer data', async () => {
@@ -107,6 +119,7 @@ describe('Async actions', () => {
       offers: {
         offers: mockOffers,
         isOffersDataLoading: false,
+        hasError: false,
       },
     }, api);
 
@@ -123,6 +136,7 @@ describe('Async actions', () => {
       offers: {
         offers: mockOffers,
         isOffersDataLoading: false,
+        hasError: false,
       },
     }, api);
 

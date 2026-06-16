@@ -11,7 +11,7 @@ import { initialOfferDataState, offerDataReducer } from './offer-data-reducer';
 
 describe('offerDataReducer', () => {
   it('should return initial state with default action', () => {
-    const result = offerDataReducer(undefined, { type: 'UNKNOWN' });
+    const result = offerDataReducer(undefined, { type: 'UNKNOWN' } as never);
 
     expect(result).toEqual(initialOfferDataState);
   });

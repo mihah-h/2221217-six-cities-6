@@ -1,15 +1,17 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { AuthorizationStatus, PASSWORD_PATTERN } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { getAuthorizationStatus } from '../../store/selectors';
-import { loginAction } from '../../store/action';
+import { changeCity, loginAction } from '../../store/action';
+import { getRandomCity } from '../../utils/get-random-city';
 
 function Login(): JSX.Element {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const [loginError, setLoginError] = useState(false);
+  const randomCity = useMemo(() => getRandomCity(), []);
 
   if (authorizationStatus === AuthorizationStatus.Auth) {
     return <Navigate to="/" />;
@@ -34,6 +36,12 @@ function Login(): JSX.Element {
           setLoginError(true);
         }
       });
+  };
+
+  const handleRandomCityClick = (evt: React.MouseEvent<HTMLAnchorElement>) => {
+    evt.preventDefault();
+    dispatch(changeCity(randomCity));
+    navigate('/');
   };
 
   return (
@@ -85,8 +93,8 @@ function Login(): JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
-                <span>Amsterdam</span>
+              <a className="locations__item-link" href="#" onClick={handleRandomCityClick}>
+                <span>{randomCity}</span>
               </a>
             </div>
           </section>

@@ -6,13 +6,14 @@ import MockAdapter from 'axios-mock-adapter';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { AuthorizationStatus } from '../../const';
-import { mockUser } from '../../mocks/mock-data';
+import { mockFavoriteOffer, mockUser } from '../../mocks/mock-data';
 import { createTestStore } from '../../utils/create-test-store';
 import Header from './header';
 
 function renderHeader(
   authorizationStatus: AuthorizationStatus,
   api = axios.create(),
+  favorites = [mockFavoriteOffer],
 ) {
   const store = createTestStore({
     user: {
@@ -22,6 +23,11 @@ function renderHeader(
     offers: {
       offers: [],
       isOffersDataLoading: false,
+      hasError: false,
+    },
+    favorites: {
+      favorites,
+      isFavoritesDataLoading: false,
     },
   }, api);
 
@@ -49,6 +55,7 @@ describe('Header', () => {
 
     expect(screen.getByText(mockUser.email)).toBeInTheDocument();
     expect(screen.getByText('Sign out')).toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
   });
 
   it('should dispatch logout on sign out click', async () => {

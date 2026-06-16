@@ -5,7 +5,7 @@ import { initialUserState, userReducer } from './user-reducer';
 
 describe('userReducer', () => {
   it('should return initial state with default action', () => {
-    const result = userReducer(undefined, { type: 'UNKNOWN' });
+    const result = userReducer(undefined, { type: 'UNKNOWN' } as never);
 
     expect(result).toEqual(initialUserState);
   });

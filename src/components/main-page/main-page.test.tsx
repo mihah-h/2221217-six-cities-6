@@ -13,6 +13,7 @@ describe('MainPage', () => {
       offers: {
         offers: [],
         isOffersDataLoading: true,
+        hasError: false,
       },
     });
 
@@ -33,6 +34,7 @@ describe('MainPage', () => {
       offers: {
         offers: [],
         isOffersDataLoading: false,
+        hasError: false,
       },
     });
 
@@ -47,12 +49,33 @@ describe('MainPage', () => {
     expect(screen.getByText('No places to stay available')).toBeInTheDocument();
   });
 
+  it('should render error message when server is unavailable', () => {
+    const store = createTestStore({
+      offers: {
+        offers: [],
+        isOffersDataLoading: false,
+        hasError: true,
+      },
+    });
+
+    render(
+      <Provider store={store}>
+        <MemoryRouter>
+          <MainPage />
+        </MemoryRouter>
+      </Provider>,
+    );
+
+    expect(screen.getByText('Unable to load data')).toBeInTheDocument();
+  });
+
   it('should change city on city click', async () => {
     const store = createTestStore({
       app: { city: 'Paris' },
       offers: {
         offers: [mockOffer],
         isOffersDataLoading: false,
+        hasError: false,
       },
     });
 
@@ -75,6 +98,7 @@ describe('MainPage', () => {
       offers: {
         offers: [mockOffer],
         isOffersDataLoading: false,
+        hasError: false,
       },
     });
 

@@ -17,6 +17,7 @@ import ReviewForm from '../review-form/review-form';
 import ReviewList from '../review-list/review-list';
 import Map from '../map/map';
 import Spinner from '../spinner/spinner';
+import { formatOfferType } from '../../utils/offer-type';
 
 function Offer(): JSX.Element {
   const { id } = useParams<{ id: string }>();
@@ -106,7 +107,7 @@ function Offer(): JSX.Element {
               </div>
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">
-                  {offer.type}
+                  {formatOfferType(offer.type)}
                 </li>
                 {offer.bedrooms && (
                   <li className="offer__feature offer__feature--bedrooms">

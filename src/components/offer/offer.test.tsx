@@ -54,6 +54,7 @@ describe('Offer', () => {
 
     expect(await screen.findByRole('heading', { level: 1, name: mockDetailedOffer.title })).toBeInTheDocument();
     expect(screen.getByText(mockDetailedOffer.description!)).toBeInTheDocument();
+    expect(screen.getByText('Apartment')).toBeInTheDocument();
     expect(screen.getByText('Other places in the neighbourhood')).toBeInTheDocument();
   });
 

@@ -9,4 +9,10 @@ describe('MainEmpty', () => {
     expect(screen.getByText('No places to stay available')).toBeInTheDocument();
     expect(screen.getByText('We could not find any property available at the moment in Paris')).toBeInTheDocument();
   });
+
+  it('should render static image instead of map', () => {
+    render(<MainEmpty city="Paris" />);
+
+    expect(screen.getByAltText('No places to stay available')).toBeInTheDocument();
+  });
 });

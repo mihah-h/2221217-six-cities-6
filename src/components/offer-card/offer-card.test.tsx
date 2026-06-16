@@ -63,6 +63,7 @@ describe('OfferCard', () => {
       offers: {
         offers: [mockOffer],
         isOffersDataLoading: false,
+        hasError: false,
       },
     }, api);
 

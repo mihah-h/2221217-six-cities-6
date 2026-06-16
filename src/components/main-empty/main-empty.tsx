@@ -13,7 +13,17 @@ function MainEmpty({ city }: MainEmptyProps): JSX.Element {
           </p>
         </div>
       </section>
-      <div className="cities__right-section"></div>
+      <div className="cities__right-section">
+        <section className="cities__map map">
+          <img
+            className="cities__no-results-image"
+            src="img/ico-no-results.svg"
+            width="260"
+            height="200"
+            alt="No places to stay available"
+          />
+        </section>
+      </div>
     </>
   );
 }

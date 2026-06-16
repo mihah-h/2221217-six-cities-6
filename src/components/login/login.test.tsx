@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Provider } from 'react-redux';
@@ -9,6 +9,10 @@ import { mockUser } from '../../mocks/mock-data';
 import { createTestStore } from '../../utils/create-test-store';
 import Login from './login';
 import MainPage from '../main-page/main-page';
+
+vi.mock('../../utils/get-random-city', () => ({
+  getRandomCity: () => 'Amsterdam',
+}));
 
 function renderLogin(api = axios.create()) {
   const store = createTestStore(undefined, api);
@@ -72,5 +76,17 @@ describe('Login', () => {
     await waitFor(() => {
       expect(screen.getByText('Paris')).toBeInTheDocument();
     });
+  });
+
+  it('should navigate to main page with selected city on random city click', async () => {
+    const { store } = renderLogin();
+
+    await userEvent.click(screen.getByText('Amsterdam'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Paris')).toBeInTheDocument();
+    });
+
+    expect(store.getState().app.city).toBe('Amsterdam');
   });
 });

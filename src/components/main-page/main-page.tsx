@@ -1,20 +1,22 @@
 import { useCallback } from 'react';
 import CitiesList from '../cities-list/cities-list';
 import Header from '../header/header';
+import ErrorMessage from '../error-message/error-message';
 import MainEmpty from '../main-empty/main-empty';
 import Spinner from '../spinner/spinner';
 import MainPageContent from './main-page-content';
 import { CITIES } from '../../const';
 import { changeCity } from '../../store/action';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { getCity, getOffersCountByCity, getOffersDataLoading } from '../../store/selectors';
+import { getCity, getOffersCountByCity, getOffersDataLoading, getOffersError } from '../../store/selectors';
 
 function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const city = useAppSelector(getCity);
   const offersCount = useAppSelector(getOffersCountByCity);
   const isOffersDataLoading = useAppSelector(getOffersDataLoading);
-  const isEmpty = !isOffersDataLoading && offersCount === 0;
+  const hasError = useAppSelector(getOffersError);
+  const isEmpty = !isOffersDataLoading && !hasError && offersCount === 0;
 
   const handleCityClick = useCallback((selectedCity: string) => {
     dispatch(changeCity(selectedCity));
@@ -23,6 +25,10 @@ function MainPage(): JSX.Element {
   const renderContent = () => {
     if (isOffersDataLoading) {
       return <Spinner />;
+    }
+
+    if (hasError) {
+      return <ErrorMessage />;
     }
 
     if (isEmpty) {

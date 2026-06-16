@@ -14,6 +14,8 @@ export const getOffers = (state: RootState): OfferType[] => state.offers.offers;
 
 export const getOffersDataLoading = (state: RootState) => state.offers.isOffersDataLoading;
 
+export const getOffersError = (state: RootState) => state.offers.hasError;
+
 export const getAuthorizationStatus = (state: RootState) => state.user.authorizationStatus;
 
 export const getUser = (state: RootState) => state.user.user;
@@ -26,9 +28,13 @@ export const getOfferReviews = (state: RootState): ReviewType[] => state.offerDa
 
 export const getOfferDataLoading = (state: RootState) => state.offerData.isOfferDataLoading;
 
+export const getFavorites = (state: RootState): OfferType[] => state.favorites.favorites;
+
+export const getFavoritesDataLoading = (state: RootState) => state.favorites.isFavoritesDataLoading;
+
 export const getFavoriteOffersCount = createSelector(
-  getOffers,
-  (offers) => offers.filter((offer) => offer.isFavorite).length,
+  getFavorites,
+  (favorites) => favorites.length,
 );
 
 export const getFilteredOffersByCity = createSelector(
@@ -70,7 +76,3 @@ export const getNearbyOffersForDisplay = createSelector(
   getNearbyOffers,
   (nearbyOffers) => nearbyOffers.slice(0, 3),
 );
-
-export const getFavorites = (state: RootState): OfferType[] => state.favorites.favorites;
-
-export const getFavoritesDataLoading = (state: RootState) => state.favorites.isFavoritesDataLoading;

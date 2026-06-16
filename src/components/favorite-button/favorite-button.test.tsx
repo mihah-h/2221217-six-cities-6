@@ -23,6 +23,7 @@ function renderFavoriteButton(
     offers: {
       offers: [mockOffer],
       isOffersDataLoading: false,
+      hasError: false,
     },
   }, api);
 

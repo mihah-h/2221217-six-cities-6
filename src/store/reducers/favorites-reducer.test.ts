@@ -8,7 +8,7 @@ import { favoritesReducer, initialFavoritesState } from './favorites-reducer';
 
 describe('favoritesReducer', () => {
   it('should return initial state with default action', () => {
-    const result = favoritesReducer(undefined, { type: 'UNKNOWN' });
+    const result = favoritesReducer(undefined, { type: 'UNKNOWN' } as never);
 
     expect(result).toEqual(initialFavoritesState);
   });

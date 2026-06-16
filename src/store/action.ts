@@ -11,6 +11,7 @@ export enum ActionType {
   ChangeCity = 'CHANGE_CITY',
   FillOffers = 'FILL_OFFERS',
   SetOffersDataLoading = 'SET_OFFERS_DATA_LOADING',
+  SetOffersError = 'SET_OFFERS_ERROR',
   SetAuthorizationStatus = 'SET_AUTHORIZATION_STATUS',
   SetUser = 'SET_USER',
   SetCurrentOffer = 'SET_CURRENT_OFFER',
@@ -35,6 +36,11 @@ export type FillOffersAction = {
 
 export type SetOffersDataLoadingAction = {
   type: ActionType.SetOffersDataLoading;
+  payload: boolean;
+};
+
+export type SetOffersErrorAction = {
+  type: ActionType.SetOffersError;
   payload: boolean;
 };
 
@@ -91,6 +97,7 @@ export type Action =
   | ChangeCityAction
   | FillOffersAction
   | SetOffersDataLoadingAction
+  | SetOffersErrorAction
   | SetAuthorizationStatusAction
   | SetUserAction
   | SetCurrentOfferAction
@@ -115,6 +122,11 @@ export const fillOffers = (offers: OfferType[]): FillOffersAction => ({
 export const setOffersDataLoading = (isOffersDataLoading: boolean): SetOffersDataLoadingAction => ({
   type: ActionType.SetOffersDataLoading,
   payload: isOffersDataLoading,
+});
+
+export const setOffersError = (hasError: boolean): SetOffersErrorAction => ({
+  type: ActionType.SetOffersError,
+  payload: hasError,
 });
 
 export const setAuthorizationStatus = (authorizationStatus: AuthorizationStatus): SetAuthorizationStatusAction => ({
@@ -166,6 +178,24 @@ export const setFavoritesDataLoading = (isFavoritesDataLoading: boolean): SetFav
   payload: isFavoritesDataLoading,
 });
 
+export const fetchFavoritesAction = () =>
+  async (
+    dispatch: Dispatch<Action>,
+    _getState: () => State,
+    api: AxiosInstance,
+  ): Promise<void> => {
+    dispatch(setFavoritesDataLoading(true));
+    try {
+      const { data } = await api.get<OfferType[]>('/favorite');
+      dispatch(fillFavorites(data));
+      data.forEach((offer) => {
+        dispatch(updateOffer({ ...offer, isFavorite: true }));
+      });
+    } finally {
+      dispatch(setFavoritesDataLoading(false));
+    }
+  };
+
 export const fetchOffersAction = () =>
   async (
     dispatch: Dispatch<Action>,
@@ -173,9 +203,12 @@ export const fetchOffersAction = () =>
     api: AxiosInstance,
   ): Promise<void> => {
     dispatch(setOffersDataLoading(true));
+    dispatch(setOffersError(false));
     try {
       const { data } = await api.get<OfferType[]>('/offers');
       dispatch(fillOffers(data));
+    } catch {
+      dispatch(setOffersError(true));
     } finally {
       dispatch(setOffersDataLoading(false));
     }
@@ -198,6 +231,7 @@ export const checkAuthAction = () =>
       const { data } = await api.get<UserType>('/login');
       dispatch(setUser(data));
       dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+      await fetchFavoritesAction()(dispatch, _getState, api);
     } catch {
       dispatch(setUser(null));
       dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
@@ -215,6 +249,7 @@ export const loginAction = ({ email, password }: LoginData) =>
       saveToken(data.token);
       dispatch(setUser(data));
       dispatch(setAuthorizationStatus(AuthorizationStatus.Auth));
+      await fetchFavoritesAction()(dispatch, _getState, api);
       return true;
     } catch {
       return false;
@@ -235,6 +270,7 @@ export const logoutAction = () =>
       dropToken();
       dispatch(setUser(null));
       dispatch(setAuthorizationStatus(AuthorizationStatus.NoAuth));
+      dispatch(fillFavorites([]));
     }
   };
 
@@ -295,22 +331,4 @@ export const toggleFavoriteAction = (offerId: string, isFavorite: boolean) =>
     const status = isFavorite ? 0 : 1;
     const { data } = await api.post<OfferType>(`/favorite/${offerId}/${status}`);
     dispatch(updateOffer(data));
-  };
-
-export const fetchFavoritesAction = () =>
-  async (
-    dispatch: Dispatch<Action>,
-    _getState: () => State,
-    api: AxiosInstance,
-  ): Promise<void> => {
-    dispatch(setFavoritesDataLoading(true));
-    try {
-      const { data } = await api.get<OfferType[]>('/favorite');
-      dispatch(fillFavorites(data));
-      data.forEach((offer) => {
-        dispatch(updateOffer({ ...offer, isFavorite: true }));
-      });
-    } finally {
-      dispatch(setFavoritesDataLoading(false));
-    }
   };

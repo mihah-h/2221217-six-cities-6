@@ -16,6 +16,7 @@ describe('MainPageContent', () => {
       offers: {
         offers: [mockOffer],
         isOffersDataLoading: false,
+        hasError: false,
       },
     });
 
@@ -38,6 +39,7 @@ describe('MainPageContent', () => {
       offers: {
         offers: [mockOffer],
         isOffersDataLoading: false,
+        hasError: false,
       },
     });
 
