@@ -54,3 +54,17 @@ export const mockUser: UserType = {
   email: 'oliver@gmail.com',
   token: 'token',
 };
+
+export const mockDetailedOffer: OfferType = {
+  ...mockOffer,
+  description: 'Spacious loft in the city center with great amenities.',
+  bedrooms: 3,
+  maxAdults: 4,
+  goods: ['Wi-Fi', 'Kitchen'],
+  host: {
+    name: 'Angelina',
+    avatarUrl: 'img/avatar-angelina.jpg',
+    isPro: true,
+  },
+  images: ['img/apartment-01.jpg', 'img/apartment-02.jpg'],
+};
